@@ -124,7 +124,7 @@ set_parameter_property MAX_WIDTH ALLOWED_RANGES {2:65535}
 set_parameter_property MAX_WIDTH DESCRIPTION "Maximum frame width"
 set_parameter_property MAX_WIDTH HDL_PARAMETER true
 
-add_parameter MAX_HEIGHT POSITIVE 1920 "Maximum frame height"
+add_parameter MAX_HEIGHT POSITIVE 1080 "Maximum frame height"
 set_parameter_property MAX_HEIGHT DISPLAY_NAME "Maximum Frame Height"
 set_parameter_property MAX_HEIGHT TYPE POSITIVE
 set_parameter_property MAX_HEIGHT UNITS None
