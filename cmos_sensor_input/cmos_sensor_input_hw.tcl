@@ -163,6 +163,7 @@ set_parameter_property DEBAYER_ENABLE UNITS None
 set_parameter_property DEBAYER_ENABLE ALLOWED_RANGES {}
 set_parameter_property DEBAYER_ENABLE DESCRIPTION "Enable Debayering"
 set_parameter_property DEBAYER_ENABLE HDL_PARAMETER true
+set_parameter_property DEBAYER_ENABLE ENABLED false
 
 add_parameter PACKER_ENABLE BOOLEAN FALSE "Enable packing of multiple pixels into a single output word of size OUTPUT_WIDTH"
 set_parameter_property PACKER_ENABLE DISPLAY_NAME "Enable Pixel Packer"
