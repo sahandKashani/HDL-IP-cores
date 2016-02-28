@@ -32,15 +32,15 @@ end entity cmos_sensor_input_packer;
 architecture rtl of cmos_sensor_input_packer is
     constant COMPRESSED_PIX_COUNT : positive := floor_div(data_out'length, PIX_DEPTH);
 
-    signal reg_count : unsigned(bit_width(COMPRESSED_PIX_COUNT) - 1 downto 0);
-    signal reg_data  : std_logic_vector(data_out'range);
+    signal reg_count    : unsigned(bit_width(COMPRESSED_PIX_COUNT) - 1 downto 0);
+    signal reg_data_out : std_logic_vector((COMPRESSED_PIX_COUNT - 1) * PIX_DEPTH - 1 downto 0);
 
 begin
     process(clk, reset)
     begin
         if reset = '1' then
-            reg_count <= (others => '0');
-            reg_data  <= (others => '0');
+            reg_count    <= (others => '0');
+            reg_data_out <= (others => '0');
 
         elsif rising_edge(clk) then
             valid_out        <= '0';
@@ -48,44 +48,35 @@ begin
             end_of_frame_out <= '0';
 
             if stop_and_reset = '1' then
-                reg_count <= to_unsigned(0, reg_count'length);
-                reg_data  <= (others => '0');
+                reg_count    <= to_unsigned(0, reg_count'length);
+                reg_data_out <= (others => '0');
             else
-                if valid_in = '0' then
-                    if reg_count = COMPRESSED_PIX_COUNT then
-                        valid_out <= '1';
-                        data_out  <= reg_data;
-
-                        reg_count                        <= to_unsigned(0, reg_count'length);
-                        reg_data(PIX_DEPTH - 1 downto 0) <= (others => '0');
-                    end if;
-
-                elsif valid_in = '1' then
+                if valid_in = '1' then
                     if start_of_frame_in = '1' then
-                        reg_count                                      <= to_unsigned(1, reg_count'length);
-                        reg_data(PIX_DEPTH - 1 downto 0)               <= data_in;
-                        reg_data(reg_data'length - 1 downto PIX_DEPTH) <= (others => '0');
+                        reg_count                                              <= to_unsigned(1, reg_count'length);
+                        reg_data_out(PIX_DEPTH - 1 downto 0)                   <= data_in;
+                        reg_data_out(reg_data_out'length - 1 downto PIX_DEPTH) <= (others => '0');
 
                     elsif end_of_frame_in = '1' then
-                        valid_out                                      <= '1';
-                        data_out(PIX_DEPTH - 1 downto 0)               <= data_in;
-                        data_out(reg_data'length - 1 downto PIX_DEPTH) <= reg_data(reg_data'length - PIX_DEPTH - 1 downto 0);
-                        end_of_frame_out                               <= '1';
+                        valid_out                                                      <= '1';
+                        data_out(PIX_DEPTH - 1 downto 0)                               <= data_in;
+                        data_out(reg_data_out'length + PIX_DEPTH - 1 downto PIX_DEPTH) <= reg_data_out;
+                        end_of_frame_out                                               <= '1';
 
                         reg_count <= to_unsigned(0, reg_count'length);
 
-                    elsif reg_count < COMPRESSED_PIX_COUNT then
-                        reg_count                                      <= reg_count + 1;
-                        reg_data(PIX_DEPTH - 1 downto 0)               <= data_in;
-                        reg_data(reg_data'length - 1 downto PIX_DEPTH) <= reg_data(reg_data'length - PIX_DEPTH - 1 downto 0);
+                    elsif reg_count < COMPRESSED_PIX_COUNT - 1 then
+                        reg_count                                              <= reg_count + 1;
+                        reg_data_out(PIX_DEPTH - 1 downto 0)                   <= data_in;
+                        reg_data_out(reg_data_out'length - 1 downto PIX_DEPTH) <= reg_data_out(reg_data_out'length - PIX_DEPTH - 1 downto 0);
 
-                    elsif reg_count = COMPRESSED_PIX_COUNT then
-                        valid_out <= '1';
-                        data_out  <= reg_data;
+                    elsif reg_count = COMPRESSED_PIX_COUNT - 1 then
+                        valid_out                                                      <= '1';
+                        data_out(PIX_DEPTH - 1 downto 0)                               <= data_in;
+                        data_out(reg_data_out'length + PIX_DEPTH - 1 downto PIX_DEPTH) <= reg_data_out;
 
-                        reg_count                                      <= to_unsigned(1, reg_count'length);
-                        reg_data(PIX_DEPTH - 1 downto 0)               <= data_in;
-                        reg_data(reg_data'length - 1 downto PIX_DEPTH) <= (others => '0');
+                        reg_count    <= to_unsigned(0, reg_count'length);
+                        reg_data_out <= (others => '0');
                     end if;
                 end if;
             end if;
