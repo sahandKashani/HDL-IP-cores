@@ -40,6 +40,8 @@ void cmos_sensor_acquisition_init(cmos_sensor_acquisition_dev *dev);
 
 void cmos_sensor_acquisition_configure(cmos_sensor_acquisition_dev *dev);
 size_t cmos_sensor_acquisition_frame_size(cmos_sensor_acquisition_dev *dev);
+uint32_t cmos_sensor_acquisition_frame_width(cmos_sensor_acquisition_dev *dev);
+uint32_t cmos_sensor_acquisition_frame_height(cmos_sensor_acquisition_dev *dev);
 bool cmos_sensor_acquisition_snapshot(cmos_sensor_acquisition_dev *dev, void *frame, size_t frame_size);
 
 #endif /* __CMOS_SENSOR_ACQUISITION_H__ */

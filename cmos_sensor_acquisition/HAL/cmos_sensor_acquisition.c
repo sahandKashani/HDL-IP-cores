@@ -109,6 +109,26 @@ size_t cmos_sensor_acquisition_frame_size(cmos_sensor_acquisition_dev *dev) {
 }
 
 /*
+ * cmos_sensor_acquisition_frame_width
+ *
+ * Returns the width of a frame in pixels (determined by the cmos_sensor_input
+ * unit).
+ */
+uint32_t cmos_sensor_acquisition_frame_width(cmos_sensor_acquisition_dev *dev) {
+    return cmos_sensor_input_frame_info_frame_width(&dev->cmos_sensor_input);
+}
+
+/*
+ * cmos_sensor_acquisition_frame_height
+ *
+ * Returns the height of a frame in pixels (determined by the cmos_sensor_input
+ * unit).
+ */
+uint32_t cmos_sensor_acquisition_frame_height(cmos_sensor_acquisition_dev *dev) {
+    return cmos_sensor_input_frame_info_frame_height(&dev->cmos_sensor_input);
+}
+
+/*
  * cmos_sensor_acquisition_snapshot
  *
  * Performs a blocking snapshot operation.
