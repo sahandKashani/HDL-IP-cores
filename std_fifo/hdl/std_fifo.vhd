@@ -12,8 +12,8 @@ use ieee.math_real.all;
 
 entity std_fifo is
     generic(
-        constant DATA_WIDTH : positive := 8;
-        constant FIFO_DEPTH : positive := 256
+        DATA_WIDTH : positive := 8;
+        FIFO_DEPTH : positive := 256
     );
     port(
         clk      : in  std_logic;
