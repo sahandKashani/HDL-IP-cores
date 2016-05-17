@@ -21,6 +21,17 @@ typedef struct cmos_sensor_output_generator_dev {
  ******************************************************************************/
 cmos_sensor_output_generator_dev cmos_sensor_output_generator_inst(void *base, uint8_t pix_depth, uint32_t max_width, uint32_t max_height);
 
+/*
+ * Helper macro for easily constructing device structures. The user needs to
+ * provide the component's prefix, and the corresponding device structure is
+ * returned.
+ */
+#define CMOS_SENSOR_OUTPUT_GENERATOR_INST(prefix)                 \
+    cmos_sensor_output_generator_inst(((void *) prefix ## _BASE), \
+                                      prefix ## _PIX_DEPTH,       \
+                                      prefix ## _MAX_WIDTH,       \
+                                      prefix ## _MAX_HEIGHT)
+
 void cmos_sensor_output_generator_init(cmos_sensor_output_generator_dev *dev);
 
 bool cmos_sensor_output_generator_configure(cmos_sensor_output_generator_dev *dev, uint32_t frame_width, uint32_t frame_height, uint32_t frame_frame_blank, uint32_t frame_line_blank, uint32_t line_line_blank, uint32_t line_frame_blank);
